@@ -1,4 +1,0 @@
-Django==2.0
-djangorestframework==3.7.3
-django-nose==1.4.5
-coverage==4.5.1
