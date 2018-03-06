@@ -1,6 +1,0 @@
-[
-  {"username": "root", "first_name": "Da", "last_name": "Master",
-    "email": "foo@bar.com",
-    "is_staff": true, "is_superuser": true,
-    "groups": ["Admin", "Example Group"]},
-]
