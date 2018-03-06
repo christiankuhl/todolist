@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'lists/css/bootstrap-datetimepicker-standalone.css' %}">
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="{% static 'lists/js/moment.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'lists/js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'lists/js/transition.js' %}"></script>
+  <script type="text/javascript" src="{% static 'lists/js/collapse.js' %}"></script>
+  <script type="text/javascript" src="{% static 'lists/js/bootstrap-datetimepicker.min.js' %}"></script>
+  <script src="{% static 'lists/js/lists.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+<section class="header">
+  <div class="row">
+    <div class="three columns value-prop"></div>
+    <div class="six columns">
+      <div class="title">{{todolist.title}}</div>
+      {% if form %}
+        <form action="{% url 'lists:add_todo' todolist.id %}" method=post>
+          {% csrf_token %}
+          <div class="row">
+            <div class ="two-thirds column">
+              {{ form.description }}
+            </div>
+            <div class ="one-third column">
+              {{ form.due_date }}
+              <script>
+                $( function() {
+                  $( "#duedate" ).datetimepicker({format: 'DD.MM.YYYY HH:mm',
+                                                  defaultDate: $(this).placeholder});
+                } );
+              </script>
+            </div>
+          </div>
+          <div class="row">
+            <input type="submit" value="Submit">
+          </div>
+        </form>
+      {% endif %}
+    </div>
+    <div class="row">
+      <div class="one-half column open-todos">
+        <h6 class="docs-header open-todos">{{ todolist.count_open }} open</h6>
+        <ul class="todo-item">
+          {% for todo in todolist.todos.all %}
+            {% if not todo.is_finished %}
+              <li class="todo-item">
+                <div class="todo-checkbox">
+                  <input type="checkbox" id="checkbox" data-todo-id="{{ todo.id }}"> {{ todo.description }}
+                </div>
+                <div class="todo-date">
+                  {{ todo.due_date.date }}
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="one-half column finished-todos">
+        <div class="docs-header">
+          <div class="inline-header" style="display:inline">
+            <h6 class="docs-header finished-todos" style="display:inline">{{ todolist.count_finished }} finished</h6>
+          </div>
+          <div class="docs-header filter">
+            {% include "lists/filter.html" %}
+          </div>
+        </div>
+        <ul class="todo-item">
+          {% for todo in todolist.todos.all %}
+            {% if todo.is_finished %}
+            <li class="todo-item">
+              <div class="todo-checkbox">
+                <input type="checkbox" id="checkbox" data-todo-id="{{ todo.id }}" checked="checked"> {{ todo.description }}
+              </div>
+              <div class="todo-date">
+                {{ todo.finished_at }}, {{ todo.done_by }}
+              </div>
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

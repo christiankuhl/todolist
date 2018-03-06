@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Tasklist GC-MC</title>
+  <meta name="description" content="Checklist daily responsibilities - GC-MC">
+  <meta name="author" content="Christian Kuhl">
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  {% load static %}
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  {% block css %}{% endblock %}
+  <link rel="stylesheet" type='text/css' href="{% static 'css/normalize.min.css' %}">
+  <link rel="stylesheet" type='text/css' href="{% static 'css/skeleton.min.css' %}">
+  <link rel="stylesheet" type='text/css' href="{% static 'css/custom.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/font.css' %}">
+  <!-- Scripts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/site.js' %}"></script>
+  {% if user.is_authenticated %}
+    <script type="text/javascript">var user_id = {{ user.id }}</script>
+  {% endif %}
+  {% block js %}{% endblock %}
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+</head>
+
+<body>
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <!-- Navigation
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="navbar-spacer"></div>
+    <nav class="navbar">
+      <div class="container">
+        <ul class="navbar-list">
+          <li class="navbar-item"><a class="navbar-link" href="{% url 'lists:index' %}">Tasks GC-MC</a></li>
+          {% if not user.is_authenticated %}
+          <li class="navbar-item">
+            <a class="navbar-link" href="{% url 'auth:login' %}">Login</a>
+          {% else %}
+            <li class="navbar-item">
+              <a class="navbar-link" href="#" data-popover="#moreNavPopover">{{ user.first_name }} {{ user.last_name }}</a>
+              <div id="moreNavPopover" class="popover">
+                <ul class="popover-list">
+                  {% for item in user.profile.menuitems %}
+                    <li class="popover-item">
+                      <a class="popover-link" href="{{ item.url }}">{{ item.text }}</a>
+                    </li>
+                  {% endfor %}
+                  <li class="popover-item">
+                    <a class="popover-link" href="{% url 'auth:change_password' %}">Change Password</a>
+                  </li>
+                  <li class="popover-item">
+                    <a class="popover-link" href="{% url 'auth:logout' %}">Logout</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            {% endif %}
+        </ul>
+      </div>
+    </nav>
+    {% block body %}{% endblock %}
+  </div>
+  <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+
+</html>

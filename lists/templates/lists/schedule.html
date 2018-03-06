@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'lists/css/bootstrap-datetimepicker-standalone.css' %}">
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="{% static 'lists/js/moment.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'lists/js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'lists/js/transition.js' %}"></script>
+  <script type="text/javascript" src="{% static 'lists/js/collapse.js' %}"></script>
+  <script type="text/javascript" src="{% static 'lists/js/bootstrap-datetimepicker.min.js' %}"></script>
+  <script src="{% static 'lists/js/lists.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+<section class="header">
+  <div class="row">
+    <div class="three columns value-prop"></div>
+    <div class="six columns">
+      {% if not schedule %}
+      <div class="title">All Schedules</div>
+      {% else %}
+      <div class="title">Edit Schedule {{ schedule }}</div>
+      {% endif %}
+    </div>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+      {% if form %}
+        {% if not schedule %}
+        <form action="{% url 'lists:add_schedule' %}" method=post>
+        {% else %}
+        <form action="{% url 'lists:schedule' schedule.id %}" method=post>
+        {% endif %}
+          {% csrf_token %}
+          <div class="u-full-width">
+            <table>
+              <tr>
+                <td class='todolist-title'>{{ form.description }}</td>
+                <td class='todolist-title'>{{ form.todolist }}</a></td>
+                <td>{{ form.frequency }}</td>
+                <td>{{ form.offset }}</td>
+                <td>{{ form.active }}</td>
+              </tr>
+            </table>
+          </div>
+          <div class="row">
+            <input type="submit" value="Submit">
+          </div>
+        </form>
+      {% endif %}
+    </div>
+    {% if not schedule %}
+    <div class="row">
+      <div class="u-full-width">
+        <!-- <h6 class="docs-header todolist-overview">All your todolists</h6> -->
+        <table id="todolist-overview-table" class="tablesorter">
+          <thead>
+            <tr>
+              <th class='todolist-title'>Description</th>
+              <th class='todolist-title'>Todolist</th>
+              <th>Frequency</th>
+              <th>Offset</th>
+              <th>Active</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for schedule in schedules %}
+            <tr>
+              <td class='todolist-title'><a href="{% url 'lists:schedule' schedule_id=schedule.id %}">{{ schedule.description }}</td>
+              <td class='todolist-title'><a href="{% url 'lists:todolist' todolist_id=schedule.todolist.id %}">{{ schedule.todolist.title }}</a></td>
+              <td>{{ schedule.get_frequency_display }}</td>
+              <td>{{ schedule.offset }}</td>
+              <td>{{ schedule.active }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+<ul class="navbar-list">
+  <li class="navbar-item">
+    <a class="inline-navbar-link glyphicon" href="#" data-popover="#filterPopover">&#xe138;</a>
+    <div id="filterPopover" class="popover">
+      <ul class="popover-list">
+        {% for function in functions %}
+          <li class="popover-item">
+            <a class="popover-link" href="{{ function.url }}">{{ function.text }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </li>
+</ul>

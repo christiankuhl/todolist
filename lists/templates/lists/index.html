@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block body %}
+<section class="header">
+  <h2 class="title">Welcome {{ greeting }}</h2>
+  <div class="row">
+    <div class="three columns value-prop"></div>
+    <div class="six columns">
+      <form action="{% url 'lists:overview' %}" method=get>
+        {% csrf_token %}
+        <dl>
+          <dt><input type="submit" class="button button-primary" value="Get Started">
+        </dl>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
